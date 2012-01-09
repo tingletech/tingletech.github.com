@@ -32,7 +32,7 @@
 outer_box = document.getElementById('outer_box');
 var update = function(x) {
   document.v.p.value = x.id;
-  document.getElementById('ref1').innerHTML = '&amp;#x' + x.getAttribute('data-cp');
+  document.getElementById('ref1').innerHTML = '&amp;#x' + x.getAttribute('data-cp') + ";" ;
   document.getElementById('ref2').innerHTML = x.title;
   window.location.hash = encodeURIComponent(x.id);
 };
