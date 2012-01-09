@@ -31,6 +31,26 @@
     <div class="bottom">Unicode Toy<br/><a href="http://twitter.com/tingletech">@tingletech</a></div>
   </div>
   <div id="outer_box">
+  <script>
+var outer_box = document.getElementById('outer_box');
+var update = function(x) {
+  document.v.p.value = x.id;
+  document.getElementById('ref1').innerHTML = '&amp;#x' + x.getAttribute('data-cp') + ";" ;
+  document.getElementById('ref2').innerHTML = x.title;
+  window.location.hash = encodeURIComponent(x.id);
+};
+outer_box.onclick = function(e) {
+  update(e.target);
+};
+var hashMove = function() {
+  if (window.location.hash) {
+    hash = decodeURIComponent(location.href.split("#")[1] || "");
+    update(document.getElementById(hash));
+  }
+}
+window.onload = hashMove;
+window.onhashchange = hashMove;
+  </script>
     <div data-cp="0024" id="$" title="DOLLAR SIGN">$</div>
     <div data-cp="002B" id="+" title="PLUS SIGN">+</div>
     <div data-cp="003C" id="&lt;" title="LESS-THAN SIGN">&lt;</div>
@@ -5540,25 +5560,5 @@
     <div data-cp="1F772" id="🝲" title="ALCHEMICAL SYMBOL FOR HALF DRAM">🝲</div>
     <div data-cp="1F773" id="🝳" title="ALCHEMICAL SYMBOL FOR HALF OUNCE">🝳</div>
   </div>
-  <script>
-outer_box = document.getElementById('outer_box');
-var update = function(x) {
-  document.v.p.value = x.id;
-  document.getElementById('ref1').innerHTML = '&amp;#x' + x.getAttribute('data-cp') + ";" ;
-  document.getElementById('ref2').innerHTML = x.title;
-  window.location.hash = encodeURIComponent(x.id);
-};
-outer_box.onclick = function(e) {
-  update(e.target);
-};
-var hashMove = function() {
-  if (window.location.hash) {
-    hash = decodeURIComponent(location.href.split("#")[1] || "");
-    update(document.getElementById(hash));
-  }
-}
-window.onload = hashMove;
-window.onhashchange = hashMove;
-  </script>
 </body>
 </html>
