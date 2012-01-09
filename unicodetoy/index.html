@@ -40,7 +40,8 @@ var update = function(x) {
   window.location.hash = encodeURIComponent(x.id);
 };
 outer_box.onclick = function(e) {
-  update(e.target || window.event.srcElement);
+  e = e || window.event;
+  update(e.target || .e.srcElement);
 };
 var hashMove = function() {
   if (window.location.hash) {
