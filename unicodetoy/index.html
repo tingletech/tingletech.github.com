@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <div>
+  <meta charset="UTF-8">
   <style>
 * { margin:0; padding:0} 
 .this { font-size: 400%; width: 2em; text-align:center; line-height: 2em; }
@@ -26,24 +27,26 @@
     <div class="ref" id="ref2"></div>
     <div class="bottom">Unicode Toy<br/><a href="http://twitter.com/tingletech">@tingletech</a></div>
   </div>
-  <div xmlns:ucd="http://www.unicode.org/ns/2003/ucd/1.0" id="outer_box">
+  <div id="outer_box">
   <script>
 outer_box = document.getElementById('outer_box');
 var update = function(x) {
   document.v.p.value = x.id;
   document.getElementById('ref1').innerHTML = '&amp;#x' + x.getAttribute('data-cp');
   document.getElementById('ref2').innerHTML = x.title;
-  window.location.hash = x.id;
+  window.location.hash = encodeURIComponent(x.id);
 };
 outer_box.onclick = function(e) {
   update(e.target);
 };
-window.onload = function() {
+var hashMove = function() {
   if (window.location.hash) {
     hash = decodeURIComponent(location.href.split("#")[1] || "");
     update(document.getElementById(hash));
   }
-};
+}
+window.onload = hashMove;
+window.onhashchange = hashMove;
   </script>
     <div data-cp="0024" id="$" title="DOLLAR SIGN">$</div>
     <div data-cp="002B" id="+" title="PLUS SIGN">+</div>
