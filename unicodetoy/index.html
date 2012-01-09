@@ -41,7 +41,7 @@ var update = function(x) {
 };
 outer_box.onclick = function(e) {
   e = e || window.event;
-  update(e.target || .e.srcElement);
+  update(e.target || e.srcElement);
 };
 var hashMove = function() {
   if (window.location.hash) {
