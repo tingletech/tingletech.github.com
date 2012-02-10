@@ -1,0 +1,20 @@
+<!DOCTYPE html>  <html> <head>   <title>dump.py</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               dump.py             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">http://inkdroid.org/journal/2011/03/31/snac-hacks/</span>
+<span class="sd">Ed Summers https://bitbucket.org/edsu</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">rdflib</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">rdflib</span><span class="o">.</span><span class="n">Graph</span><span class="p">(</span><span class="s">&quot;Sleepycat&quot;</span><span class="p">,</span> <span class="n">rdflib</span><span class="o">.</span><span class="n">URIRef</span><span class="p">(</span><span class="s">&quot;http://viaf.org&quot;</span><span class="p">))</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;store&quot;</span><span class="p">,</span> <span class="n">create</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+<span class="n">graph</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;foaf&quot;</span><span class="p">,</span> <span class="n">rdflib</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span><span class="s">&quot;http://xmlns.com/foaf/0.1/&quot;</span><span class="p">))</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;arch&quot;</span><span class="p">,</span> <span class="n">rdflib</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span><span class="s">&quot;http://purl.org/archival/vocab/arch#&quot;</span><span class="p">))</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s">&quot;owl&quot;</span><span class="p">,</span> <span class="n">rdflib</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span><span class="s">&quot;http://www.w3.org/2002/07/owl#&quot;</span><span class="p">))</span>
+
+<span class="n">graph</span><span class="o">.</span><span class="n">serialize</span><span class="p">(</span><span class="nb">file</span><span class="p">(</span><span class="s">&quot;snac-viaf.rdf&quot;</span><span class="p">,</span> <span class="s">&quot;w&quot;</span><span class="p">),</span> <span class="n">format</span><span class="o">=</span><span class="s">&quot;xml&quot;</span><span class="p">)</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 

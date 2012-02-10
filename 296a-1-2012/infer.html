@@ -1,0 +1,53 @@
+<!DOCTYPE html>  <html> <head>   <title>infer.py</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               infer.py             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>                            </td>             <td class="code">               <div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">http://inkdroid.org/journal/2011/03/31/snac-hacks/</span>
+<span class="sd">Ed Summers https://bitbucket.org/edsu</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Use the owl:sameAs assertions in the SNAC graph to create a new </span>
+<span class="sd">graph oriented around VIAF URIs as subjects and objects.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">rdflib</span>
+
+
+<span class="n">OWL</span> <span class="o">=</span> <span class="n">rdflib</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span><span class="s">&quot;http://www.w3.org/2002/07/owl#&quot;</span><span class="p">)</span>
+<span class="n">VIAF</span> <span class="o">=</span> <span class="n">rdflib</span><span class="o">.</span><span class="n">URIRef</span><span class="p">(</span><span class="s">&quot;http://viaf.org&quot;</span><span class="p">)</span>
+
+<span class="n">snac_graph</span> <span class="o">=</span> <span class="n">rdflib</span><span class="o">.</span><span class="n">ConjunctiveGraph</span><span class="p">(</span><span class="s">&quot;Sleepycat&quot;</span><span class="p">)</span>
+<span class="n">snac_graph</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;store&quot;</span><span class="p">)</span>
+
+<span class="n">viaf_graph</span> <span class="o">=</span> <span class="n">rdflib</span><span class="o">.</span><span class="n">ConjunctiveGraph</span><span class="p">(</span><span class="s">&quot;Sleepycat&quot;</span><span class="p">,</span> <span class="n">VIAF</span><span class="p">)</span>
+<span class="n">viaf_graph</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s">&quot;store&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="n">new_t</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">t</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;http://socialarchive.iath.virginia.edu&quot;</span><span class="p">):</span>
+            <span class="n">new_t</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">snac_graph</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">OWL</span><span class="o">.</span><span class="n">sameAs</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_t</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">None</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_t</span> <span class="ow">and</span> <span class="n">new_t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">new_t</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>
+        <span class="k">print</span> <span class="nb">unicode</span><span class="p">(</span><span class="n">new_t</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">viaf_graph</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">new_t</span><span class="p">)</span>
+
+
+<span class="k">for</span> <span class="n">snac_uri</span><span class="p">,</span> <span class="n">other_uri</span> <span class="ow">in</span> <span class="n">snac_graph</span><span class="o">.</span><span class="n">subject_objects</span><span class="p">(</span><span class="n">predicate</span><span class="o">=</span><span class="n">OWL</span><span class="o">.</span><span class="n">sameAs</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">snac_uri</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;http://socialarchive.iath.virginia.edu&quot;</span><span class="p">):</span>
+        <span class="k">continue</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span> <span class="n">other_uri</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;http://viaf.org&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">other_uri</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&quot;http://dbpedia&quot;</span><span class="p">)</span> <span class="p">):</span>
+        <span class="k">continue</span>
+
+    <span class="n">viaf_graph</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">other_uri</span><span class="p">,</span> <span class="n">OWL</span><span class="o">.</span><span class="n">sameAs</span><span class="p">,</span> <span class="n">snac_uri</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">snac_graph</span><span class="o">.</span><span class="n">triples</span><span class="p">((</span><span class="n">snac_uri</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">)):</span>
+        <span class="n">add</span><span class="p">((</span><span class="n">other_uri</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">o</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">snac_graph</span><span class="o">.</span><span class="n">triples</span><span class="p">((</span><span class="bp">None</span><span class="p">,</span> <span class="bp">None</span><span class="p">,</span> <span class="n">snac_uri</span><span class="p">)):</span>
+        <span class="n">add</span><span class="p">((</span><span class="n">s</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">other_uri</span><span class="p">))</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
