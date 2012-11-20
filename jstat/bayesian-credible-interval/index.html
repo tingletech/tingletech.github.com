@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="UTF-8"/>
+    <title>bayesian credible intervals for a discrete random variable</title>
+    <style>
+/* css from https://gist.github.com/4061502 */
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: auto;
+  position: relative;
+  width: 960px;
+}
+
+button {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.box {
+  font: 10px sans-serif;
+}
+
+.box line,
+.box rect,
+.box circle {
+  fill: #fff;
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+
+.box .center {
+  stroke-dasharray: 3,3;
+}
+
+.box .outlier {
+  fill: none;
+  stroke: #ccc;
+  display: none;
+}
+
+input[type=number] { width: 4em; }
+</style>
+  </head>
+  <body>
+    <h1>bayesian credible intervals for a discrete random variable</h1>
+    <div>
+      <form id="observations" onsubmit="recalculate(); return false;">
+        <input type="number" value="6">
+        <input type="number" value="7">
+        <input type="number" value="53">
+        <input type="number" value="30">
+        <input type="number" value="36">
+        <input type="number" value="23">
+        <input type="number" value="58">
+        <input type="number" value="0">
+        <input type="submit" value="recalculate"/>
+      </form>
+      <div id="svg"/>
+    </div>
+<div>
+
+<p>Based on <a href="http://bl.ocks.org/4061502">d3.js box plots example</a>,
+this page calculates bayesian credible intervals for a discrete random variable 
+pop-up user survey.
+
+<p>The coding logic of how to do this was explained to me in R by
+<a href="http://stats.stackexchange.com/questions/39319/bayesian-user-survey-with-a-credible-interval#40403">Zen on stats.stackexchange.com</a> and I translated this
+to <a href="https://gist.github.com/3928832">python</a> and now to javascript.
+
+<p>This uses <a href="https://github.com/jstat/jstat/">https://github.com/jstat/jstat/</a> JavaScript Statistical Libraray to get random samples from the gamma distribution for 
+calculating the dirichlet distribution.
+
+<p>A Data Driven Docuent <a href="http://d3js.org">http://d3js.org</a> is used to display the box plots.
+</div>
+
+    <footer>
+      <a class="user-login user-href" href="http://bl.ocks.org/tingletech/">tingletech</a>’s block <a class="gist-href" href="https://gist.github.com/4108269">#<span class="gist-id">4108269</span></a> based on
+  <a class="user-login user-href" href="/mbostock">mbostock</a>’s block <a class="gist-href" href="https://gist.github.com/4061502">#<span class="gist-id">4061502</span></a> <a href="http://bl.ocks.org/4061502">Box Plots D3 example</a>
+
+    </footer>
+  </body>
+  <script src="http://tingletech.github.com/jstat/jstat.min.js"></script>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="box.js"></script>
+  <script>
+'use strict';
+// http://stats.stackexchange.com/questions/39319/bayesian-user-survey-with-a-credible-interval#40403
+// https://gist.github.com/3896501
+var rdirichlet = function(a){
+  var y = [];
+  var sum_y = 0;
+  // first loop with the gamma sample
+  for (var i = 0; i < a.length; i++) {
+    y[i] = jStat.gamma.sample(a[i], a.length, 1);
+    sum_y = sum_y + y[i];
+  }
+  // second loop to normalize
+  for (var i = 0; i < a.length; i++) {
+    y[i] = y[i] / sum_y;
+  }
+  return y;
+};
+
+var monte_carlo = function(observations){
+  var ITERATIONS = 1000;
+  var results = [];
+  var max = 0;
+  for (var i =0; i < observations.length; i++) {
+    observations[i] = observations[i] + 1;
+    results[i] = [];
+  }
+  for (var i = 0; i < ITERATIONS; i++) {
+    var roll = rdirichlet(observations);
+    for (var j = 0; j < roll.length; j++) {
+      var v = roll[j];
+      if (v > max) max = v;
+      results[j].push(v);
+    }
+  }
+  /*
+      the return array is an array of arrays
+
+      results.length == observations.length
+      results.[i].length == ITERATIONS
+
+      That is because this matches "data" in https://gist.github.com/4061502
+
+  */
+  return {
+    'results': results,
+    'max': max
+  };
+}
+
+// need to get these into the chart
+var categories = [
+    'k-12 teacher or librarian',
+    'k-12 student',
+    'college or graduate student',
+    'faculty or academic researcher',
+    'archivist or librarian',
+    'genealogist or family researcher',
+    'other'
+];
+
+var recalculate = function(){
+
+  var observations = [];
+  var form = d3.selectAll('#observations input[type=number]')[0];
+  for (var i = 0; i < form.length; i++) {
+    observations.push(parseInt(form[i].value));
+  }
+
+  // run 1000 simulations
+  var simulations = 1000;
+  
+  // set up a standard library array to hold the simulation results
+  
+  var mc = monte_carlo(observations);
+  var results = mc.results;
+  var max = mc['max'];
+
+  // 
+  
+  
+  // from here down is copied from https://gist.github.com/4061502
+  
+  
+  var margin = {top: 10, right: 50, bottom: 20, left: 50},
+      width = 120 - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom;
+  
+  var chart = d3.box()
+      .whiskers(iqr(1.5))
+      .width(width)
+      .height(height);
+  
+    chart.domain([0, max]);
+
+    d3.select("body").selectAll("svg").remove();
+  
+    var svg = d3.select("#svg").selectAll("svg")
+        .data(results)
+      .enter().append("svg")
+        .attr("class", "box")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.bottom + margin.top)
+      .append("g")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+        .call(chart);
+};
+
+// Returns a function to compute the interquartile range.
+function iqr(k) {
+  return function(d, i) {
+    var q1 = d.quartiles[0],
+        q3 = d.quartiles[2],
+        iqr = (q3 - q1) * k,
+        i = -1,
+        j = d.length;
+    while (d[++i] < q1 - iqr);
+    while (d[--j] > q3 + iqr);
+    return [i, j];
+  };
+}
+
+recalculate();
+
+  </script>
+</html>
