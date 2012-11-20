@@ -41,11 +41,25 @@ button {
 }
 
 input[type=number] { width: 4em; }
+
+#outliers { float: right;  }
+
 </style>
   </head>
   <body>
     <h1>bayesian credible intervals for a discrete random variable</h1>
     <div>
+      <form id="outliers">
+        <input type="checkbox" value="outliers" checked="checked" onchange="
+  var cssRuleCode = document.all ? 'rules' : 'cssRules';
+  var rule = document.styleSheets[0][cssRuleCode][5];
+  if (rule.style.display == 'none') {
+    rule.style.display = '';
+  } else {
+    rule.style.display = 'none';
+  };
+"> show outliers
+      </form>
       <form id="observations" onsubmit="recalculate(); return false;">
         <input type="number" value="6">
         <input type="number" value="7">
