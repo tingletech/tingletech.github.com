@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="UTF-8"/>
-    <title>bayesian credible intervals for a discrete random variable</title>
+    <title>bayesian analysis in javascript: credible intervals for a discrete random variable</title>
     <style>
 /* css from https://gist.github.com/4061502 */
 body {
@@ -47,7 +47,8 @@ input[type=number] { width: 4em; }
 </style>
   </head>
   <body>
-    <h1>bayesian credible intervals for a discrete random variable</h1>
+    <h1>bayesian analysis in javascript</h1>
+    <h2>credible intervals for a discrete random variable</h2>
     <div>
       <form id="outliers">
         <input type="checkbox" value="outliers" checked="checked" onchange="
@@ -80,14 +81,14 @@ input[type=number] { width: 4em; }
 
 
 <p>Based on <a href="http://bl.ocks.org/4061502">d3.js box plots example</a>,
-this page calculates bayesian credible intervals for a discrete random variable 
+this page calculates bayesian credible intervals for a discrete random variable collected from a 
 pop-up user survey.
 
 <p>The coding and mathmatical logic of how to do this was explained to me in R by
 <a href="http://stats.stackexchange.com/questions/39319/bayesian-user-survey-with-a-credible-interval#40403">Zen on stats.stackexchange.com</a> and I translated this
 to <a href="https://gist.github.com/3928832">python</a> and now to javascript.
 <p>
-I asked:
+<a href="http://stats.stackexchange.com/questions/39319/bayesian-user-survey-with-a-credible-interval">I asked:</a>
 <blockquote>We want to know the proportion of our users who fit into each category, and we want to have some sense of how accurate our numbers are. We also want to know if/how these proportions change during different times of year.
 ...is this a problem where I can use Bayesian stats?
 </blockquote>
@@ -109,7 +110,7 @@ calculating the <a href="http://en.wikipedia.org/wiki/Dirichlet_distribution">di
 
     <footer>
       <a class="user-login user-href" href="https://twitter.com/tingletech">@tingletech</a> <!-- <a class="gist-href" href="http://bl.ocks.org/4108269">#<span class="gist-id">4108269</span></a> --> based on
-  <a class="user-login user-href" href="http://bl.ocks.org/mbostock">mbostock</a>’s block <a class="gist-href" href="https://gist.github.com/4061502">#<span class="gist-id">4061502</span></a> <a href="http://bl.ocks.org/4061502">Box Plots D3 example</a>
+  <a class="user-login user-href" href="http://bl.ocks.org/mbostock">mbostock</a>’s block <a class="gist-href" href="https://gist.github.com/4061502">#<span class="gist-id">4061502</span></a> <a href="http://bl.ocks.org/4061502">Box Plots D3 example</a>  gamma distribution from <a href="https://github.com/jstat/jstat/">jStat</a>
 
     </footer>
   </body>
