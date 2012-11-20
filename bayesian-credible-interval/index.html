@@ -70,7 +70,7 @@ input[type=number] { width: 4em; }
         <input type="number" value="23">
         <input type="number" value="58">
         <input type="number" value="0">
-        <input type="submit" value="recalculate"/> <i>k</i> = 8
+        <input type="submit" value="recalculate"/>
       </form>
       <div style="text-align: center; padding: 1em;">posterior distribution - quartiles with whisker marks</div>
       <div id="svg"/>
@@ -185,7 +185,8 @@ var recalculate = function(){
   var observations = [];
   var form = d3.selectAll('#observations input[type=number]')[0];
   for (var i = 0; i < form.length; i++) {
-    observations.push(parseInt(form[i].value));
+    var o = parseInt(form[i].value);
+    if (o || o == 0) observations.push(o);
   }
 
   // run 1000 simulations
