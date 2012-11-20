@@ -37,7 +37,7 @@ button {
 .box .outlier {
   fill: none;
   stroke: #ccc;
-  display: none;
+  /* display: none; */
 }
 
 input[type=number] { width: 4em; }
@@ -60,6 +60,9 @@ input[type=number] { width: 4em; }
       <div id="svg"/>
     </div>
 <div>
+
+<blockquote>The whiskers mark those values which are minimum and maximum unless these values exceed 1.5 * IQR. The IQR is the inter quartile range: the distance between Q1 and Q3. If there are observations which are outside 1.5 * IQR or even 3 * IQR then they are considered as mild and extreme outliers, respectively.  -- <a href="http://informationandvisualization.de/blog/box-plot">http://informationandvisualization.de/blog/box-plot</a></blockquote>
+
 
 <p>Based on <a href="http://bl.ocks.org/4061502">d3.js box plots example</a>,
 this page calculates bayesian credible intervals for a discrete random variable 
