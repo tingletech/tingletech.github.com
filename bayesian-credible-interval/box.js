@@ -9,7 +9,7 @@ d3.box = function() {
       value = Number,
       whiskers = boxWhiskers,
       quartiles = boxQuartiles,
-      tickFormat = null;
+      tickFormat = d3.format(".3p");
 
   // For each small multiple…
   function box(g) {
