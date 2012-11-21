@@ -182,27 +182,21 @@ var categories = [
 
 var recalculate = function(){
 
+  // read observations from the form
   var observations = [];
   var form = d3.selectAll('#observations input[type=number]')[0];
   for (var i = 0; i < form.length; i++) {
     var o = parseInt(form[i].value);
+    // check if the input was a number
     if (o || o == 0) observations.push(o);
   }
 
-  // run 1000 simulations
-  var simulations = 1000;
-  
-  // set up a standard library array to hold the simulation results
-  
   var mc = monte_carlo(observations);
-  var results = mc.results;
-  var max = mc['max'];
+  // round the max up to make things less jumpy
+  var max = Math.ceil(mc['max'] * 10) / 10;
+  var min = 0;
 
-  // 
-  
-  
   // from here down is copied from https://gist.github.com/4061502
-  
   
   var margin = {top: 10, right: 50, bottom: 20, left: 50},
       width = 120 - margin.left - margin.right,
@@ -213,12 +207,12 @@ var recalculate = function(){
       .width(width)
       .height(height);
   
-    chart.domain([0, max]);
+    chart.domain([min, max]);
 
     d3.select("body").selectAll("svg").remove();
   
     var svg = d3.select("#svg").selectAll("svg")
-        .data(results)
+        .data(mc.results)
       .enter().append("svg")
         .attr("class", "box")
         .attr("width", width + margin.left + margin.right)
