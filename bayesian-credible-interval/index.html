@@ -44,6 +44,16 @@ input[type=number] { width: 4em; }
 
 #outliers { float: right;  }
 
+.categories {
+  width: 960px; 
+  overflow: hidden;
+}
+.categories div {  
+  width: 120px; 
+  float: left; 
+  text-align: center; 
+}
+
 </style>
   </head>
   <body>
@@ -62,6 +72,7 @@ input[type=number] { width: 4em; }
 "> show outliers
       </form>
       <form id="observations" onsubmit="recalculate(); return false;">
+        <span>
         <input type="number" value="6">
         <input type="number" value="7">
         <input type="number" value="53">
@@ -70,12 +81,26 @@ input[type=number] { width: 4em; }
         <input type="number" value="23">
         <input type="number" value="58">
         <input type="number" value="0">
+        </span>
         <input type="submit" value="recalculate"/>
+        <input id="iterations" name="iterations" type="number" value="1000"/> iterations
       </form>
       <div style="text-align: center; padding: 1em;">posterior distribution - quartiles with whisker marks</div>
-      <div id="svg"/>
+      <div id="svg"></div>
+      <div class="categories">
+        <div contenteditable="true" width="120">k-12 teacher or librarian</div>
+        <div contenteditable="true" width="120">k-12 student</div>
+        <div contenteditable="true" width="120">college or graduate student</div>
+        <div contenteditable="true" width="120">faculty or academic researcher</div>
+        <div contenteditable="true" width="120">archivist or librarian</div>
+        <div contenteditable="true" width="120">genealogist or family researcher</div>
+        <div contenteditable="true" width="120">other</div>
+        <div contenteditable="true" width="120">other</div>
+      </div>
     </div>
 <div>
+
+<hr/>
 
 <blockquote>The whiskers mark those values which are minimum and maximum unless these values exceed 1.5 * IQR. The IQR is the inter quartile range: the distance between Q1 and Q3. If there are observations which are outside 1.5 * IQR or even 3 * IQR then they are considered as mild and extreme outliers, respectively.  -- <a href="http://informationandvisualization.de/blog/box-plot">http://informationandvisualization.de/blog/box-plot</a></blockquote>
 
@@ -114,10 +139,9 @@ calculating the <a href="http://en.wikipedia.org/wiki/Dirichlet_distribution">di
 
     </footer>
   </body>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/1.2.4/es5-shim.min.js"></script>
+  <!-- script src="http://cdnjs.cloudflare.com/ajax/libs/es5-shim/1.2.4/es5-shim.min.js"></script -->
   <script src="http://tingletech.github.com/jstat/jstat.min.js"></script>
-  <script src="http://d3js.org/d3.v3.js"></script>
-  <!-- script src="http://d3js.org/d3.v3.min.js"></script -->
+  <script src="http://d3js.org/d3.v3.min.js"></script>
   <script src="box.js"></script>
   <script>
 'use strict';
@@ -138,8 +162,8 @@ var rdirichlet = function(a){
   return y;
 };
 
-var monte_carlo = function(observations){
-  var ITERATIONS = 1000;
+var monte_carlo = function(observations, iterations){
+  var ITERATIONS = iterations || 10000;
   var results = [];
   var max = 0;
   for (var i =0; i < observations.length; i++) {
@@ -169,29 +193,19 @@ var monte_carlo = function(observations){
   };
 }
 
-// need to get these into the chart
-var categories = [
-    'k-12 teacher or librarian',
-    'k-12 student',
-    'college or graduate student',
-    'faculty or academic researcher',
-    'archivist or librarian',
-    'genealogist or family researcher',
-    'other'
-];
-
 var recalculate = function(){
 
   // read observations from the form
   var observations = [];
-  var form = d3.selectAll('#observations input[type=number]')[0];
+  var form = d3.selectAll('#observations span input[type=number]')[0];
   for (var i = 0; i < form.length; i++) {
     var o = parseInt(form[i].value);
     // check if the input was a number
     if (o || o == 0) observations.push(o);
   }
+  var iterations = parseInt(document.getElementById('iterations').value);
 
-  var mc = monte_carlo(observations);
+  var mc = monte_carlo(observations, iterations);
   // round the max up to make things less jumpy
   var max = Math.ceil(mc['max'] * 10) / 10;
   var min = 0;
@@ -205,7 +219,8 @@ var recalculate = function(){
   var chart = d3.box()
       .whiskers(iqr(1.5))
       .width(width)
-      .height(height);
+      .height(height)
+      .tickFormat(d3.format(".2p"));
   
     chart.domain([min, max]);
 
