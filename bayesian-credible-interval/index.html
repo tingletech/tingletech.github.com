@@ -75,26 +75,26 @@ input[type=number] { width: 4em; }
         <span>
         <input type="number" value="6">
         <input type="number" value="7">
-        <input type="number" value="53">
+        <input type="number" value="25">
         <input type="number" value="30">
         <input type="number" value="36">
         <input type="number" value="23">
+        <input type="number" value="14">
         <input type="number" value="58">
-        <input type="number" value="0">
         </span>
         <input type="submit" value="recalculate"/>
         <input id="iterations" name="iterations" type="number" value="1000"/> iterations
       </form>
-      <div style="text-align: center; padding: 1em;">posterior distribution - quartiles with whisker marks</div>
+      <div style="text-align: center; padding: 1em;">posterior probability distribution - quartiles with whisker marks</div>
       <div id="svg"></div>
       <div class="categories">
         <div contenteditable="true" width="120">k-12 teacher or librarian</div>
         <div contenteditable="true" width="120">k-12 student</div>
-        <div contenteditable="true" width="120">college or graduate student</div>
+        <div contenteditable="true" width="120">college student</div>
+        <div contenteditable="true" width="120">graduate student</div>
         <div contenteditable="true" width="120">faculty or academic researcher</div>
-        <div contenteditable="true" width="120">archivist or librarian</div>
         <div contenteditable="true" width="120">genealogist or family researcher</div>
-        <div contenteditable="true" width="120">other</div>
+        <div contenteditable="true" width="120">archivist or librarian</div>
         <div contenteditable="true" width="120">other</div>
       </div>
     </div>
@@ -130,6 +130,15 @@ calculating the <a href="http://en.wikipedia.org/wiki/Dirichlet_distribution">di
 
 
 <script src="https://gist.github.com/4108269.js?file=dirichlet.js"></script>
+
+</div>
+
+<div>see also: 
+  <ul>
+    <li><a href="http://tingletech.tumblr.com/tagged/pop-up-survey">http://tingletech.tumblr.com/tagged/pop-up-survey</a></li>
+    <li><a href="http://www.peakconversion.com/2012/02/ab-split-test-graphical-calculator/">
+  AB split test calculator - Peak Conversion</a></li>
+  </ul>
 
 </div>
 
@@ -194,6 +203,14 @@ var monte_carlo = function(observations, iterations){
 }
 
 var recalculate = function(){
+
+  if (!document
+       .implementation
+       .hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")) {
+    document.getElementById('svg').innerHTML = 'svg support required';
+    return false;
+  }
+
 
   // read observations from the form
   var observations = [];
