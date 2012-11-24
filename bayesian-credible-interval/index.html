@@ -5,6 +5,7 @@
     <title>bayesian analysis in javascript: credible intervals for a discrete random variable</title>
     <style>
 /* css from https://gist.github.com/4061502 */
+
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   margin: auto;
@@ -41,52 +42,45 @@ button {
 }
 
 input[type=number] { width: 4em; }
+input[type=submit] { font-size: 1.5em; }
 
-#outliers { float: right;  }
+.outliers { float: right;  }
 
-.categories {
+.outer, .categories, .input-numbers {
   width: 960px; 
   overflow: hidden;
+  display: block;
 }
-.categories div {  
+.categories div, .input-numbers div {  
   width: 120px; 
   float: left; 
   text-align: center; 
 }
 
+h1 { 
+  margin-bottom: 0; 
+  font-size: 24px; 
+}
+
 </style>
   </head>
   <body>
-    <h1>bayesian analysis in javascript</h1>
-    <h2>credible intervals for a discrete random variable</h2>
-    <div>
-      <form id="outliers">
-        <input type="checkbox" value="outliers" checked="checked" onchange="
-  var cssRuleCode = document.all ? 'rules' : 'cssRules';
-  var rule = document.styleSheets[0][cssRuleCode][5];
-  if (rule.style.display == 'none') {
-    rule.style.display = '';
-  } else {
-    rule.style.display = 'none';
-  };
-"> show outliers
-      </form>
-      <form id="observations" onsubmit="recalculate(); return false;">
-        <span>
-        <input type="number" value="6">
-        <input type="number" value="7">
-        <input type="number" value="25">
-        <input type="number" value="30">
-        <input type="number" value="36">
-        <input type="number" value="23">
-        <input type="number" value="14">
-        <input type="number" value="58">
+    <h1 contenteditable="true">bayesian analysis in javascript: credible intervals for a discrete random variable</h1>
+    <div class="outer">
+      <!-- div style="text-align: center;">posterior probability distribution - quartiles with whisker marks</div -->
+      <div id="svg">calculating... </div>
+      <form id="observations">
+        <span class="input-numbers">
+          <div><input type="number" value="6"/></div>
+          <div><input type="number" value="7"/></div>
+          <div><input type="number" value="25"/></div>
+          <div><input type="number" value="30"/></div>
+          <div><input type="number" value="36"/></div>
+          <div><input type="number" value="23"/></div>
+          <div><input type="number" value="14"/></div>
+          <div><input type="number" value="58"/></div>
         </span>
-        <input type="submit" value="recalculate"/>
-        <input id="iterations" name="iterations" type="number" value="1000"/> iterations
       </form>
-      <div style="text-align: center; padding: 1em;">posterior probability distribution - quartiles with whisker marks</div>
-      <div id="svg"></div>
       <div class="categories">
         <div contenteditable="true" width="120">k-12 teacher or librarian</div>
         <div contenteditable="true" width="120">k-12 student</div>
@@ -97,6 +91,21 @@ input[type=number] { width: 4em; }
         <div contenteditable="true" width="120">archivist or librarian</div>
         <div contenteditable="true" width="120">other</div>
       </div>
+      <form id="recalculate" onsubmit="recalculate(); return false;">
+        <div class="outliers">
+          <input type="submit" value="recalculate"/>
+        </div>
+          <input id="iterations" name="iterations" type="number" value="1000"> iterations</input>
+          <br/><input type="checkbox" value="outliers" checked="checked" onchange="
+  var cssRuleCode = document.all ? 'rules' : 'cssRules';
+  var rule = document.styleSheets[0][cssRuleCode][5];
+  if (rule.style.display == 'none') {
+    rule.style.display = '';
+  } else {
+    rule.style.display = 'none';
+  };
+"> show outliers</input>
+      </form>
     </div>
 <div>
 
@@ -107,13 +116,13 @@ input[type=number] { width: 4em; }
 
 <p>Based on <a href="http://bl.ocks.org/4061502">d3.js box plots example</a>,
 this page calculates bayesian credible intervals for a discrete random variable collected from a 
-pop-up user survey.
+pop-up user survey.</p>
 
 <p>The coding and mathmatical logic of how to do this was explained to me in R by
 <a href="http://stats.stackexchange.com/questions/39319/bayesian-user-survey-with-a-credible-interval#40403">Zen on stats.stackexchange.com</a> and I translated this
-to <a href="https://gist.github.com/3928832">python</a> and now to javascript.
+to <a href="https://gist.github.com/3928832">python</a> and now to javascript.</p>
 <p>
-<a href="http://stats.stackexchange.com/questions/39319/bayesian-user-survey-with-a-credible-interval">I asked:</a>
+<a href="http://stats.stackexchange.com/questions/39319/bayesian-user-survey-with-a-credible-interval">I asked:</a></p>
 <blockquote>We want to know the proportion of our users who fit into each category, and we want to have some sense of how accurate our numbers are. We also want to know if/how these proportions change during different times of year.
 ...is this a problem where I can use Bayesian stats?
 </blockquote>
@@ -124,9 +133,9 @@ to <a href="https://gist.github.com/3928832">python</a> and now to javascript.
 
 
 <p>This uses <a href="https://github.com/jstat/jstat/">https://github.com/jstat/jstat/</a> JavaScript Statistical Libraray to get random samples from the gamma distribution for 
-calculating the <a href="http://en.wikipedia.org/wiki/Dirichlet_distribution">dirichlet distribution</a>.
+calculating the <a href="http://en.wikipedia.org/wiki/Dirichlet_distribution">dirichlet distribution</a>.</p>
 
-<p>A Data Driven Docuent <a href="http://d3js.org">http://d3js.org</a> is used to display the box plots.
+<p>A Data Driven Docuent <a href="http://d3js.org">http://d3js.org</a> is used to display the box plots.</p>
 
 
 <script src="https://gist.github.com/4108269.js?file=dirichlet.js"></script>
@@ -152,7 +161,7 @@ calculating the <a href="http://en.wikipedia.org/wiki/Dirichlet_distribution">di
   <script src="http://tingletech.github.com/jstat/jstat.min.js"></script>
   <script src="http://d3js.org/d3.v3.min.js"></script>
   <script src="box.js"></script>
-  <script>
+  <script><!--
 'use strict';
 // http://stats.stackexchange.com/questions/39319/bayesian-user-survey-with-a-credible-interval#40403
 // https://gist.github.com/3896501
@@ -203,14 +212,13 @@ var monte_carlo = function(observations, iterations){
 }
 
 var recalculate = function(){
-
+  // svg support test
   if (!document
        .implementation
        .hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")) {
     document.getElementById('svg').innerHTML = 'svg support required';
     return false;
   }
-
 
   // read observations from the form
   var observations = [];
@@ -221,11 +229,13 @@ var recalculate = function(){
     if (o || o == 0) observations.push(o);
   }
   var iterations = parseInt(document.getElementById('iterations').value);
-
+  // run the simulation
   var mc = monte_carlo(observations, iterations);
   // round the max up to make things less jumpy
   var max = Math.ceil(mc['max'] * 10) / 10;
   var min = 0;
+
+  document.getElementById('svg').innerHTML = '';
 
   // from here down is copied from https://gist.github.com/4061502
   
@@ -253,7 +263,7 @@ var recalculate = function(){
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .call(chart);
 };
-
+-->
 // Returns a function to compute the interquartile range.
 function iqr(k) {
   return function(d, i) {
@@ -270,5 +280,5 @@ function iqr(k) {
 
 recalculate();
 
-  </script>
+</script>
 </html>
